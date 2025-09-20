@@ -14,3 +14,22 @@ In this first experiment, I explore the basics of Java threading:
 **Scenario:**  
 Passengers (threads) arrive at the airport and are processed concurrently.  
 The control tower (main thread) waits until all passengers are finished before closing the process.
+
+### Experiment 2 — Thread Termination (Gate Shutdown)
+
+In this experiment, I explore **how to stop threads cleanly**:
+
+#### 🅰 Graceful Shutdown 
+- Uses a `volatile running` flag and `interrupt()` together.
+- Worker thread continuously processes passengers until the control tower signals closure.
+- Demonstrates that:
+    - `running=false` → prevents further loop iterations,
+    - `interrupt()` → wakes the thread if it is blocked (e.g., during `sleep`).
+- Outcome: worker finishes ongoing work and exits in a controlled manner.
+
+#### 🅱 Executor Shutdown (GateTask + ExecutorService)
+- Multiple short-lived `GateTask` jobs are submitted to a fixed thread pool.
+- `shutdown()` → no new tasks, but existing ones finish.
+- `awaitTermination()` → waits for tasks to complete.
+- `shutdownNow()` → interrupts running tasks and cancels queued ones.
+- Outcome: shows the difference between **graceful** and **forceful** termination.
