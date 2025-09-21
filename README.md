@@ -62,3 +62,35 @@ Start three tasks in parallel:
 Main thread calls `join()` on all three before allowing pushback.
 
 **Outcome:** Total preparation time ≈ the longest task (Fueling). This demonstrates the *critical path* idea.
+
+---
+
+## Experiment 4 — Latency (Security Screening)
+
+In this experiment, I simulate passengers going through airport security.  
+Each passenger takes a random amount of time: most are fast (120–220 ms), but a few take much longer (800–1500 ms).  
+This models **tail latency** — the rare but very slow cases.
+
+We measure:
+- **Per-passenger latency** (min, p50, p95, p99, max, avg)
+- **Wall time** (total time until all passengers finish)
+- **Throughput** (passengers per second)
+
+### Results (300 passengers)
+
+| Lanes | Wall (ms) | Throughput (passenger/s) | p50 (ms) | p95 (ms) | p99 (ms) | Max (ms) | Avg (ms) |
+|-------|-----------|--------------------------|----------|----------|----------|----------|----------|
+| 1     | 82638     | 3.63                     | 187      | 1239     | 1571     | 1682     | 275.1    |
+| 4     | 20824     | 14.41                    | 187      | 1239     | 1574     | 1685     | 275.1    |
+| 8     | 10481     | 28.62                    | 187      | 1163     | 1574     | 1683     | 264.4    |
+
+### Key takeaways
+- **More lanes → lower wall time, higher throughput.**  
+  (From 82s at 1 lane → ~10s at 8 lanes)
+- **Median latency (p50)** stayed ~187 ms: fast passengers are always fast.
+- **Tail latencies (p95/p99)** improved slightly with more lanes (less queuing),  
+  but never fully disappeared — a slow passenger is still slow.
+- **Average latency** dropped a bit when queues were shorter.
+
+In short: adding lanes improves system capacity and reduces the waiting effect,  
+but **it cannot eliminate the inherent slowness of tail cases**.
