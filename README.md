@@ -94,3 +94,32 @@ We measure:
 
 In short: adding lanes improves system capacity and reduces the waiting effect,  
 but **it cannot eliminate the inherent slowness of tail cases**.
+
+---
+
+## Experiment 5 — Producer–Consumer (Baggage Belt System)
+
+In this experiment, I implemented the classic **Producer–Consumer** pattern using Java’s `BlockingQueue`.
+
+### Scenario
+- I modeled **passengers** as producers dropping luggage onto a **baggage belt** (a shared queue).
+- The belt had a fixed capacity (10). If it was full, passengers had to wait before dropping more bags.
+- I modeled **handlers** as consumers who continuously took bags from the belt and loaded them onto the plane.
+- With more passengers than handlers, the belt filled up and producers blocked.
+- With more handlers than passengers, handlers sometimes waited for bags.
+
+### What I learned
+- How to coordinate multiple threads safely using `BlockingQueue`.
+- That **`put()`** blocks when the queue is full (backpressure on producers).
+- That **`take()`** blocks when the queue is empty (consumers wait for work).
+- How multiple producers and consumers can work together without writing `synchronized` or `wait/notify`.
+- How this pattern applies to real-world systems like request queues, message brokers (Kafka, RabbitMQ), or baggage belts at airports.
+
+### Example run
+I simulated 20 passengers (producers) with 5 check-in counters (threads) and 2 baggage handlers (consumers).  
+Passengers dropped their bags, and handlers loaded them in parallel.  
+When all passengers were done, I interrupted the handlers to stop them gracefully.
+
+**Outcome:**  
+I observed the baggage belt fill and drain dynamically.  
+By changing the number of passengers, handlers, or belt capacity, I can see different bottlenecks and backpressure effects.
