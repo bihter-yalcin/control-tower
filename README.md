@@ -123,3 +123,34 @@ When all passengers were done, I interrupted the handlers to stop them gracefull
 **Outcome:**  
 I observed the baggage belt fill and drain dynamically.  
 By changing the number of passengers, handlers, or belt capacity, I can see different bottlenecks and backpressure effects.
+
+---
+
+## Experiment 6 — Locking Strategies (Runway & Gates)
+
+In this experiment, I explored different **locking strategies** in Java to coordinate multiple threads and avoid problems like race conditions or deadlocks.
+
+### Single Runway (`synchronized`)
+- **Scenario:** Only one aircraft can use the runway at a time.
+- I used `synchronized` to make the runway a **critical section**.
+- Multiple threads tried to access it, but only one was allowed at once.
+- **Outcome:** I learned that `synchronized` is the simplest way to enforce mutual exclusion. It guarantees safety but does not guarantee fairness (which thread goes first).
+
+### Deadlock (wrong lock ordering)
+- **Scenario:** Aircraft A acquires `TRACTOR` first, then wants `RUNWAY`.  
+  Aircraft B acquires `RUNWAY` first, then wants `TRACTOR`.
+- Both threads hold one lock and wait forever for the other → program hangs.
+- **Outcome:** I learned how deadlock happens when multiple threads acquire locks in inconsistent order and never release them.
+
+### Deadlock Solution #1: Consistent Ordering
+- **Scenario:** All flights acquire locks in the **same order** (first `TRACTOR`, then `RUNWAY`).
+- This simple rule prevents circular waiting, so no deadlock occurs.
+- **Outcome:** I learned that enforcing a **global lock ordering** is an easy and effective way to prevent deadlocks.
+
+### Deadlock Solution #2: ReentrantLock with `tryLock(timeout)`
+- **Scenario:** Flights still need both `TRACTOR` and `RUNWAY`.  
+  This time I used `ReentrantLock` (fair mode) and `tryLock(timeout)`.
+- Each thread tries to get the first lock, then the second.
+    - If it fails within the timeout, it releases what it has and retries.
+- This prevents deadlock by ensuring no one waits forever.
+- **Outcome:** I learned that `ReentrantLock` provides advanced control: fairness, timed locking, and retry strategies. It’s more flexible and powerful than `synchronized`.
