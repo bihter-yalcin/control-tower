@@ -154,3 +154,11 @@ In this experiment, I explored different **locking strategies** in Java to coord
     - If it fails within the timeout, it releases what it has and retries.
 - This prevents deadlock by ensuring no one waits forever.
 - **Outcome:** I learned that `ReentrantLock` provides advanced control: fairness, timed locking, and retry strategies. It’s more flexible and powerful than `synchronized`.
+
+###  ReentrantReadWriteLock (Runway Metaphor)
+- **Scenario:** Multiple planes (readers) come to check runway lights, while one plane (writer) needs to take off.
+- Implemented `ReentrantReadWriteLock` with separate **read** and **write** locks.
+- **Readers:** Can proceed concurrently if no writer holds the lock.
+- **Writer:** Requires exclusive access and blocks all other readers/writers until done.
+- This pattern improves efficiency in **read-heavy workloads**, since reads don’t block each other.
+- **Outcome:** I learned that `ReentrantReadWriteLock` allows fine-grained concurrency: many parallel reads with exclusive writes, making it more powerful than a single lock.
