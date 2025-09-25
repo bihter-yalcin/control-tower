@@ -167,7 +167,7 @@ In this experiment, I explored different **locking strategies** in Java to coord
 
 ## Experiment 07 — Inter-Thread Communication (wait/notifyAll)
 
-## Scenario
+### Scenario
 This experiment demonstrates **inter-thread communication** using `synchronized`, `wait()`, and `notifyAll()`.
 
 - **Control Tower (Producer):** Places planes onto the runway.
@@ -175,7 +175,7 @@ This experiment demonstrates **inter-thread communication** using `synchronized`
 - **RunwayBuffer:** A single-slot runway (capacity = 1).
 - **RUNWAY_CLOSED signal:** Sent by the tower at the end to gracefully stop all pilots.
 
-## How It Works
+### How It Works
 1. **Producer puts a plane** onto the runway.
     - If runway is full → producer waits.
     - After placing → calls `notifyAll()` to wake consumers.
