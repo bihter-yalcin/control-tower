@@ -1,4 +1,4 @@
-package lab.exp05_producerconsumer;
+package lab.exp05_producerConsumer;
 
 import java.util.Random;
 import java.util.concurrent.*;

@@ -162,3 +162,29 @@ In this experiment, I explored different **locking strategies** in Java to coord
 - **Writer:** Requires exclusive access and blocks all other readers/writers until done.
 - This pattern improves efficiency in **read-heavy workloads**, since reads don’t block each other.
 - **Outcome:** I learned that `ReentrantReadWriteLock` allows fine-grained concurrency: many parallel reads with exclusive writes, making it more powerful than a single lock.
+
+---
+
+# Experiment 07 — Inter-Thread Communication (wait/notifyAll)
+
+## Scenario
+This experiment demonstrates **inter-thread communication** using `synchronized`, `wait()`, and `notifyAll()`.
+
+- **Control Tower (Producer):** Places planes onto the runway.
+- **Pilots (Consumers):** Take planes from the runway and simulate flights.
+- **RunwayBuffer:** A single-slot runway (capacity = 1).
+- **RUNWAY_CLOSED signal:** Sent by the tower at the end to gracefully stop all pilots.
+
+## How It Works
+1. **Producer puts a plane** onto the runway.
+    - If runway is full → producer waits.
+    - After placing → calls `notifyAll()` to wake consumers.
+
+2. **Consumer takes a plane** from the runway.
+    - If runway is empty → consumer waits.
+    - After taking → calls `notifyAll()` to wake producer.
+
+3. **Termination:**
+    - The tower sends a `RUNWAY_CLOSED` message for each consumer.
+    - Each pilot, upon receiving it, logs and exits.
+
