@@ -165,7 +165,7 @@ In this experiment, I explored different **locking strategies** in Java to coord
 
 ---
 
-# Experiment 07 — Inter-Thread Communication (wait/notifyAll)
+## Experiment 07 — Inter-Thread Communication (wait/notifyAll)
 
 ## Scenario
 This experiment demonstrates **inter-thread communication** using `synchronized`, `wait()`, and `notifyAll()`.
