@@ -188,3 +188,27 @@ This experiment demonstrates **inter-thread communication** using `synchronized`
     - The tower sends a `RUNWAY_CLOSED` message for each consumer.
     - Each pilot, upon receiving it, logs and exits.
 
+---
+
+## Experiment 8: Async with Timeout, Fallback, and Retry
+
+## Scenario
+Before takeoff, three services run in parallel:
+- **Fueling** (critical)
+- **Security Check** (critical, retried on failure)
+- **Catering** (not critical, fallback to `FALLBACK_MENU` if it fails or times out)
+
+If both critical tasks succeed, the plane proceeds to **Pushback & Taxi**.  
+Otherwise, the flight is **ABORTED**.
+
+## Learnings
+- Run tasks concurrently with `CompletableFuture.supplyAsync`.
+- Use `allOf` to wait for all services.
+- Add **timeouts** with `orTimeout`.
+- Apply **fallbacks** for non-critical tasks.
+- Implement simple **retry with backoff** for critical tasks.
+
+## Outcome
+Critical failures stop the workflow,  
+non-critical failures fall back safely,  
+and async flows become more resilient.
